@@ -130,6 +130,8 @@ class IntlPhoneField extends StatefulWidget {
 
   final String languageCode;
 
+  final String hintText;
+
   /// 2 letter ISO Code or country dial code.
   ///
   /// ```dart
@@ -148,7 +150,7 @@ class IntlPhoneField extends StatefulWidget {
   ///
   /// Specify null to remove the decoration entirely (including the
   /// extra padding introduced by the decoration to save space for the labels).
-  final InputDecoration decoration;
+  final InputDecoration? decoration;
 
   /// The style to use for the text being edited.
   ///
@@ -264,13 +266,14 @@ class IntlPhoneField extends StatefulWidget {
     this.keyboardType = TextInputType.phone,
     this.controller,
     this.focusNode,
-    this.decoration = const InputDecoration(),
+    this.decoration,
     this.style,
     this.dropdownTextStyle,
     this.onSubmitted,
     this.validator,
     this.onChanged,
     this.countries,
+    this.hintText,
     this.onCountryChanged,
     this.onSaved,
     this.showDropdownIcon = true,
@@ -280,7 +283,7 @@ class IntlPhoneField extends StatefulWidget {
     this.keyboardAppearance,
     @Deprecated('Use searchFieldInputDecoration of PickerDialogStyle instead') this.searchText = 'Search country',
     this.dropdownIconPosition = IconPosition.leading,
-    this.dropdownIcon = const Icon(Icons.arrow_drop_down),
+    this.dropdownIcon = const Icon(Icons.keyboard_arrow_down_rounded),
     this.autofocus = false,
     this.textInputAction,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
@@ -399,10 +402,38 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
       showCursor: widget.showCursor,
       onFieldSubmitted: widget.onSubmitted,
       magnifierConfiguration: widget.magnifierConfiguration,
-      decoration: widget.decoration.copyWith(
-        prefixIcon: _buildFlagsButton(),
-        counterText: !widget.enabled ? '' : null,
-      ),
+      decoration: widget.decoration ??
+          InputDecoration(
+            suffix: _buildFlagsButton(),
+            hintText: widget.hintText,
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 16,
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 12,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              // Rounded corners
+              borderSide: const BorderSide(
+                color: Colors.grey,
+              ), // Grey border
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(
+                color: Colors.blue,
+              ), // Change color when focused
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(
+                color: Colors.red,
+              ), // Change color when focused
+            ),
+          ),
       style: widget.style,
       onSaved: (value) {
         widget.onSaved?.call(
@@ -461,7 +492,6 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(width: 4),
                 if (widget.enabled &&
                     widget.showDropdownIcon &&
                     widget.dropdownIconPosition == IconPosition.trailing) ...[
@@ -475,20 +505,22 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                   widget.dropdownIcon,
                   const SizedBox(width: 4),
                 ],
+                FittedBox(
+                  child: Text(
+                    "+" + '${_selectedCountry.dialCode}',
+                    style: widget.dropdownTextStyle,
+                    textDirection: TextDirection.ltr,
+                  ),
+                ),
+                const SizedBox(width: 4),
                 if (widget.showCountryFlag) ...[
                   Image.asset(
                     'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
                     package: 'intl_phone_field',
-                    width: 32,
+                    width: 22,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 17),
                 ],
-                FittedBox(
-                  child: Text(
-                    '+${_selectedCountry.dialCode}',
-                    style: widget.dropdownTextStyle,
-                  ),
-                ),
               ],
             ),
           ),

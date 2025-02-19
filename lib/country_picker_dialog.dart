@@ -102,6 +102,13 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                     InputDecoration(
                       suffixIcon: const Icon(Icons.search),
                       labelText: widget.searchText,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        // Rounded corners
+                        borderSide: const BorderSide(
+                          color: Colors.grey,
+                        ), // Grey border
+                      ),
                     ),
                 onChanged: (value) {
                   _filteredCountries = widget.countryList.stringSearch(value)
@@ -120,16 +127,11 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                 itemBuilder: (ctx, index) => Column(
                   children: <Widget>[
                     ListTile(
-                      leading: kIsWeb
-                          ? Image.asset(
-                              'assets/flags/${_filteredCountries[index].code.toLowerCase()}.png',
-                              package: 'intl_phone_field',
-                              width: 32,
-                            )
-                          : Text(
-                              _filteredCountries[index].flag,
-                              style: const TextStyle(fontSize: 18),
-                            ),
+                      leading: Image.asset(
+                        'assets/flags/${_filteredCountries[index].code.toLowerCase()}.png',
+                        package: 'intl_phone_field',
+                        width: 32,
+                      ),
                       contentPadding: widget.style?.listTilePadding,
                       title: Text(
                         _filteredCountries[index].localizedName(widget.languageCode),
@@ -138,6 +140,7 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                       trailing: Text(
                         '+${_filteredCountries[index].dialCode}',
                         style: widget.style?.countryCodeStyle ?? const TextStyle(fontWeight: FontWeight.w700),
+                        textDirection: TextDirection.ltr,
                       ),
                       onTap: () {
                         _selectedCountry = _filteredCountries[index];
