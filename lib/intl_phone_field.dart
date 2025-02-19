@@ -273,7 +273,7 @@ class IntlPhoneField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.countries,
-    this.hintText,
+    this.hintText = " ",
     this.onCountryChanged,
     this.onSaved,
     this.showDropdownIcon = true,
