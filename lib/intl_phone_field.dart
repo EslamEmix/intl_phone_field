@@ -461,9 +461,14 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(
-                  width: 4,
-                ),
+                const SizedBox(width: 4),
+                if (widget.enabled &&
+                    widget.showDropdownIcon &&
+                    widget.dropdownIconPosition == IconPosition.trailing) ...[
+                  const SizedBox(width: 4),
+                  widget.dropdownIcon,
+                ],
+                const SizedBox(width: 8),
                 if (widget.enabled &&
                     widget.showDropdownIcon &&
                     widget.dropdownIconPosition == IconPosition.leading) ...[
@@ -471,16 +476,11 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                   const SizedBox(width: 4),
                 ],
                 if (widget.showCountryFlag) ...[
-                  kIsWeb
-                      ? Image.asset(
-                          'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
-                          package: 'intl_phone_field',
-                          width: 32,
-                        )
-                      : Text(
-                          _selectedCountry.flag,
-                          style: const TextStyle(fontSize: 18),
-                        ),
+                  Image.asset(
+                    'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
+                    package: 'intl_phone_field',
+                    width: 32,
+                  ),
                   const SizedBox(width: 8),
                 ],
                 FittedBox(
@@ -489,13 +489,6 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                     style: widget.dropdownTextStyle,
                   ),
                 ),
-                if (widget.enabled &&
-                    widget.showDropdownIcon &&
-                    widget.dropdownIconPosition == IconPosition.trailing) ...[
-                  const SizedBox(width: 4),
-                  widget.dropdownIcon,
-                ],
-                const SizedBox(width: 8),
               ],
             ),
           ),
